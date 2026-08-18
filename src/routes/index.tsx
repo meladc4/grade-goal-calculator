@@ -204,7 +204,7 @@ function Index() {
                 id="currentGrade"
                 label="Current Grade"
                 suffix="%"
-                placeholder="0"
+                placeholder="87"
                 value={values.currentGrade}
                 error={touched.currentGrade ? errors.currentGrade : undefined}
                 onChange={handleChange("currentGrade")}
@@ -215,7 +215,7 @@ function Index() {
                 id="examWeight"
                 label="Final Exam Weight"
                 suffix="%"
-                placeholder="0"
+                placeholder="30"
                 value={values.examWeight}
                 error={touched.examWeight ? errors.examWeight : undefined}
                 onChange={handleChange("examWeight")}
@@ -226,7 +226,7 @@ function Index() {
                 id="desiredGrade"
                 label="Desired Final Grade"
                 suffix="%"
-                placeholder="0"
+                placeholder="90"
                 value={values.desiredGrade}
                 error={touched.desiredGrade ? errors.desiredGrade : undefined}
                 onChange={handleChange("desiredGrade")}
