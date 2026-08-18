@@ -77,14 +77,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "C4TOOLS" },
+      {
+        name: "description",
+        content:
+          "C4TOOLS is a clean, modern Grade Calculator for students. Find out exactly what you need on your final exam.",
+      },
+      { name: "author", content: "Melad" },
+      { property: "og:title", content: "C4TOOLS" },
+      {
+        property: "og:description",
+        content:
+          "C4TOOLS is a clean, modern Grade Calculator for students. Find out exactly what you need on your final exam.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@C4TOOLS" },
     ],
     links: [
       {
