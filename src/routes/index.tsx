@@ -289,7 +289,7 @@ interface NumberFieldProps {
   suffix: string;
   placeholder: string;
   value: string;
-  error?: string;
+  error: string | undefined;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
 }
