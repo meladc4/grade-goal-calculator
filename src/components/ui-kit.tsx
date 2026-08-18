@@ -16,12 +16,12 @@ export function NumberField({
 }: {
   id: string;
   label: string;
-  suffix?: string;
-  placeholder?: string;
+  suffix?: string | undefined;
+  placeholder?: string | undefined;
   value: string;
-  error?: string;
+  error?: string | undefined;
   onChange: (value: string) => void;
-  onBlur?: () => void;
+  onBlur?: (() => void) | undefined;
   allowNegative?: boolean;
 }) {
   return (
@@ -71,7 +71,7 @@ export function TextField({
 }: {
   id: string;
   label: string;
-  placeholder?: string;
+  placeholder?: string | undefined;
   value: string;
   onChange: (value: string) => void;
 }) {
@@ -103,9 +103,9 @@ export function PrimaryButton({
   type = "button",
 }: {
   children: ReactNode;
-  onClick?: () => void;
-  className?: string;
-  type?: "button" | "submit";
+  onClick?: (() => void) | undefined;
+  className?: string | undefined;
+  type?: "button" | "submit" | undefined;
 }) {
   return (
     <button
@@ -125,9 +125,9 @@ export function SecondaryButton({
   ariaLabel,
 }: {
   children: ReactNode;
-  onClick?: () => void;
-  className?: string;
-  ariaLabel?: string;
+  onClick?: (() => void) | undefined;
+  className?: string | undefined;
+  ariaLabel?: string | undefined;
 }) {
   return (
     <button
@@ -146,7 +146,7 @@ export function ResultBanner({
   tone = "result",
 }: {
   children: ReactNode;
-  tone?: "result" | "success" | "destructive";
+  tone?: "result" | "success" | "destructive" | undefined;
 }) {
   const toneClass =
     tone === "success"
@@ -176,9 +176,9 @@ export function ToolShell({
 }: {
   title: string;
   description: string;
-  icon?: LucideIcon;
+  icon?: LucideIcon | undefined;
   children: ReactNode;
-  footnote?: ReactNode;
+  footnote?: ReactNode | undefined;
 }) {
   const { t } = useI18n();
   return (

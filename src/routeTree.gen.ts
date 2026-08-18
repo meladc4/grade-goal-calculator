@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GradeAverageRouteImport } from './routes/grade-average'
+import { Route as GradeCalculatorRouteImport } from './routes/grade-calculator'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GradeAverageRoute = GradeAverageRouteImport.update({
+  id: '/grade-average',
+  path: '/grade-average',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GradeCalculatorRoute = GradeCalculatorRouteImport.update({
+  id: '/grade-calculator',
+  path: '/grade-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/grade-average': typeof GradeAverageRoute
+  '/grade-calculator': typeof GradeCalculatorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/grade-average': typeof GradeAverageRoute
+  '/grade-calculator': typeof GradeCalculatorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/grade-average': typeof GradeAverageRoute
+  '/grade-calculator': typeof GradeCalculatorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/grade-average' | '/grade-calculator'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/grade-average' | '/grade-calculator'
+  id: '__root__' | '/' | '/grade-average' | '/grade-calculator'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GradeAverageRoute: typeof GradeAverageRoute
+  GradeCalculatorRoute: typeof GradeCalculatorRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/grade-average': {
+      id: '/grade-average'
+      path: '/grade-average'
+      fullPath: '/grade-average'
+      preLoaderRoute: typeof GradeAverageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/grade-calculator': {
+      id: '/grade-calculator'
+      path: '/grade-calculator'
+      fullPath: '/grade-calculator'
+      preLoaderRoute: typeof GradeCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GradeAverageRoute: GradeAverageRoute,
+  GradeCalculatorRoute: GradeCalculatorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
