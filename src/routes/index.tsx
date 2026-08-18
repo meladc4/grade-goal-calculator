@@ -1,341 +1,108 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import * as Icons from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import { MAIN_TOOLS, SECONDARY_TOOLS, type ToolMeta } from "@/lib/tools";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "C4TOOLS — Grade Calculator" },
+      { title: "C4TOOLS — Student Tools Made Simple" },
       {
         name: "description",
         content:
-          "C4TOOLS Grade Calculator helps students find exactly what they need on their final exam to reach their target grade.",
+          "C4TOOLS offers a Grade Calculator, Grade Average Calculator and 10 more free student tools — GPA, percentage, timers, converters and more.",
       },
-      {
-        property: "og:title",
-        content: "C4TOOLS — Grade Calculator",
-      },
+      { property: "og:title", content: "C4TOOLS — Student Tools Made Simple" },
       {
         property: "og:description",
         content:
-          "Find out exactly what you need on your final exam with C4TOOLS.",
+          "Free student calculators and timers: grades, averages, GPA, percentages, Pomodoro and more.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Index,
+  component: Home,
 });
 
-interface FormState {
-  currentGrade: string;
-  examWeight: string;
-  desiredGrade: string;
+function ToolIcon({ name, className }: { name: string; className?: string }) {
+  const Icon = (Icons as unknown as Record<string, Icons.LucideIcon>)[name] ?? Icons.Wrench;
+  return <Icon className={className} aria-hidden="true" />;
 }
 
-interface FormErrors {
-  currentGrade?: string;
-  examWeight?: string;
-  desiredGrade?: string;
-}
-
-interface CalculationResult {
-  value: number;
-  message: string;
-  status: "possible" | "already-there" | "impossible";
-}
-
-function Index() {
-  const [values, setValues] = useState<FormState>({
-    currentGrade: "",
-    examWeight: "",
-    desiredGrade: "",
-  });
-
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [touched, setTouched] = useState<Record<keyof FormState, boolean>>({
-    currentGrade: false,
-    examWeight: false,
-    desiredGrade: false,
-  });
-  const [result, setResult] = useState<CalculationResult | null>(null);
-
-  const parsePercent = (value: string): number | null => {
-    const trimmed = value.trim();
-    if (trimmed === "") return null;
-    const num = Number(trimmed);
-    if (!Number.isFinite(num)) return null;
-    return num;
-  };
-
-  const validate = (next: FormState): FormErrors => {
-    const nextErrors: FormErrors = {};
-
-    const current = parsePercent(next.currentGrade);
-    if (current === null) {
-      nextErrors.currentGrade = "Enter a number between 0 and 100.";
-    } else if (current < 0 || current > 100) {
-      nextErrors.currentGrade = "Current grade must be between 0 and 100.";
-    }
-
-    const weight = parsePercent(next.examWeight);
-    if (weight === null) {
-      nextErrors.examWeight = "Enter a number greater than 0 and at most 100.";
-    } else if (weight <= 0 || weight > 100) {
-      nextErrors.examWeight = "Exam weight must be greater than 0 and at most 100.";
-    }
-
-    const desired = parsePercent(next.desiredGrade);
-    if (desired === null) {
-      nextErrors.desiredGrade = "Enter a number between 0 and 100.";
-    } else if (desired < 0 || desired > 100) {
-      nextErrors.desiredGrade = "Desired grade must be between 0 and 100.";
-    }
-
-    return nextErrors;
-  };
-
-  const handleChange = (field: keyof FormState) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const raw = e.target.value;
-    // Allow only digits, one decimal point, and a leading minus (though 0-100
-    // means it will be rejected by validation). This keeps the keyboard friendly
-    // and prevents letters/symbols.
-    const sanitized = raw.replace(/[^0-9.]/g, "");
-    const next = { ...values, [field]: sanitized };
-    setValues(next);
-    setErrors(validate(next));
-  };
-
-  const handleBlur = (field: keyof FormState) => () => {
-    setTouched((prev) => ({ ...prev, [field]: true }));
-  };
-
-  const calculate = () => {
-    const allTouched: Record<keyof FormState, boolean> = {
-      currentGrade: true,
-      examWeight: true,
-      desiredGrade: true,
-    };
-    setTouched(allTouched);
-
-    const validationErrors = validate(values);
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length > 0) {
-      setResult(null);
-      return;
-    }
-
-    const current = parsePercent(values.currentGrade)!;
-    const weight = parsePercent(values.examWeight)!;
-    const desired = parsePercent(values.desiredGrade)!;
-
-    const weightDecimal = weight / 100;
-    const required =
-      (desired - current * (1 - weightDecimal)) / weightDecimal;
-
-    let message: string;
-    let status: CalculationResult["status"];
-
-    if (required <= 0) {
-      message = "You've already reached your target.";
-      status = "already-there";
-    } else if (required > 100) {
-      message = "This target isn't mathematically possible with this exam.";
-      status = "impossible";
-    } else {
-      const rounded = Math.round(required * 10) / 10;
-      const formatted = Number.isInteger(rounded)
-        ? rounded.toString()
-        : rounded.toFixed(1);
-      message = `You need ${formatted}% on your final exam.`;
-      status = "possible";
-    }
-
-    setResult({ value: required, message, status });
-  };
-
-  const reset = () => {
-    setValues({ currentGrade: "", examWeight: "", desiredGrade: "" });
-    setErrors({});
-    setTouched({
-      currentGrade: false,
-      examWeight: false,
-      desiredGrade: false,
-    });
-    setResult(null);
-  };
-
-  const resultColor = useMemo(() => {
-    if (!result) return "bg-primary";
-    switch (result.status) {
-      case "already-there":
-        return "bg-success";
-      case "impossible":
-        return "bg-destructive";
-      case "possible":
-      default:
-        return "bg-result";
-    }
-  }, [result]);
-
+function MainToolCard({ tool }: { tool: ToolMeta }) {
+  const { t } = useI18n();
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
-        <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="mb-8 text-center sm:mb-10">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              C4TOOLS
-            </h1>
-            <p className="mt-2 text-lg font-semibold text-primary sm:text-xl">
-              Grade Calculator
-            </p>
-            <p className="mt-3 text-sm text-muted-foreground sm:text-base">
-              Find out exactly what you need on your final exam.
-            </p>
-          </div>
-
-          {/* Calculator Card */}
-          <div className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-7">
-            <div className="space-y-5">
-              <NumberField
-                id="currentGrade"
-                label="Current Grade"
-                suffix="%"
-                placeholder="87"
-                value={values.currentGrade}
-                error={touched.currentGrade ? errors.currentGrade : undefined}
-                onChange={handleChange("currentGrade")}
-                onBlur={handleBlur("currentGrade")}
-              />
-
-              <NumberField
-                id="examWeight"
-                label="Final Exam Weight"
-                suffix="%"
-                placeholder="30"
-                value={values.examWeight}
-                error={touched.examWeight ? errors.examWeight : undefined}
-                onChange={handleChange("examWeight")}
-                onBlur={handleBlur("examWeight")}
-              />
-
-              <NumberField
-                id="desiredGrade"
-                label="Desired Final Grade"
-                suffix="%"
-                placeholder="90"
-                value={values.desiredGrade}
-                error={touched.desiredGrade ? errors.desiredGrade : undefined}
-                onChange={handleChange("desiredGrade")}
-                onBlur={handleBlur("desiredGrade")}
-              />
-            </div>
-
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:gap-3">
-              <button
-                type="button"
-                onClick={calculate}
-                className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-primary px-6 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none active:scale-[0.98]"
-              >
-                Calculate
-              </button>
-              <button
-                type="button"
-                onClick={reset}
-                className="inline-flex h-12 w-full items-center justify-center rounded-xl border border-border bg-background px-6 text-base font-semibold text-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none active:scale-[0.98]"
-              >
-                Reset
-              </button>
-            </div>
-
-            {/* Result */}
-            {result && (
-              <div
-                className={`mt-6 rounded-xl p-5 text-center ${resultColor} text-primary-foreground animate-in fade-in slide-in-from-bottom-2 duration-300`}
-                role="status"
-                aria-live="polite"
-              >
-                <p className="text-sm font-medium opacity-90">Result</p>
-                <p className="mt-1 text-xl font-bold leading-snug sm:text-2xl">
-                  {result.message}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Formula hint */}
-          <p className="mt-6 text-center text-xs text-muted-foreground sm:text-sm">
-            Required Exam Grade = (Target − Current × (1 − Weight)) ÷ Weight
-          </p>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-border py-5">
-        <p className="text-center text-xs text-muted-foreground sm:text-sm">
-          © 2026 C4TOOLS — Created by Melad
-        </p>
-      </footer>
-    </div>
+    <Link
+      to={tool.path}
+      className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-primary/50 hover:bg-accent/40"
+    >
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+        <ToolIcon name={tool.icon} className="size-6" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-base font-semibold text-foreground sm:text-lg">
+          {t(tool.nameKey)}
+        </span>
+        <span className="mt-0.5 block text-sm text-muted-foreground">{t(tool.descKey)}</span>
+      </span>
+      <Icons.ChevronRight
+        className="size-5 shrink-0 text-muted-foreground rtl:rotate-180"
+        aria-hidden="true"
+      />
+    </Link>
   );
 }
 
-interface NumberFieldProps {
-  id: string;
-  label: string;
-  suffix: string;
-  placeholder: string;
-  value: string;
-  error: string | undefined;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur: () => void;
+function SecondaryToolCard({ tool }: { tool: ToolMeta }) {
+  const { t } = useI18n();
+  return (
+    <Link
+      to={tool.path}
+      className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/50 hover:bg-accent/40"
+    >
+      <span className="flex size-9 items-center justify-center rounded-lg bg-accent text-primary">
+        <ToolIcon name={tool.icon} className="size-4.5" />
+      </span>
+      <span className="text-sm font-semibold leading-snug text-foreground">{t(tool.nameKey)}</span>
+      <span className="text-xs leading-snug text-muted-foreground">{t(tool.descKey)}</span>
+    </Link>
+  );
 }
 
-function NumberField({
-  id,
-  label,
-  suffix,
-  placeholder,
-  value,
-  error,
-  onChange,
-  onBlur,
-}: NumberFieldProps) {
+function Home() {
+  const { t } = useI18n();
+
   return (
-    <div className="space-y-1.5">
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium text-foreground sm:text-base"
-      >
-        {label}
-      </label>
-      <div className="relative">
-        <input
-          id={id}
-          type="text"
-          inputMode="decimal"
-          pattern="[0-9]*[.]?[0-9]*"
-          autoComplete="off"
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          aria-invalid={!!error}
-          aria-describedby={error ? `${id}-error` : undefined}
-          className="block w-full rounded-xl border border-input bg-background px-4 py-3.5 text-lg font-semibold text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring focus:outline-none sm:text-xl"
-        />
-        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-base font-medium text-muted-foreground sm:text-lg">
-          {suffix}
-        </span>
+    <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">C4TOOLS</h1>
+        <p className="mt-2 text-base text-muted-foreground sm:text-lg">{t("brand.tagline")}</p>
       </div>
-      {error && (
-        <p id={`${id}-error`} className="text-sm text-destructive">
-          {error}
-        </p>
-      )}
+
+      <section id="main-tools" className="mt-10">
+        <h2 className="text-lg font-semibold text-foreground sm:text-xl">
+          {t("section.mainTools")}
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">{t("section.mainToolsDesc")}</p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {MAIN_TOOLS.map((tool) => (
+            <MainToolCard key={tool.path} tool={tool} />
+          ))}
+        </div>
+      </section>
+
+      <section id="more-tools" className="mt-10">
+        <h2 className="text-lg font-semibold text-foreground sm:text-xl">
+          {t("section.moreTools")}
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">{t("section.moreToolsDesc")}</p>
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {SECONDARY_TOOLS.map((tool) => (
+            <SecondaryToolCard key={tool.path} tool={tool} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
