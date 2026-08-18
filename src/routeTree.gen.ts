@@ -10,17 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as GpaRouteImport } from './routes/gpa'
 import { Route as GradeAverageRouteImport } from './routes/grade-average'
 import { Route as GradeCalculatorRouteImport } from './routes/grade-calculator'
+import { Route as GradeConverterRouteImport } from './routes/grade-converter'
 import { Route as PercentageRouteImport } from './routes/percentage'
+import { Route as PomodoroRouteImport } from './routes/pomodoro'
+import { Route as StudyTimerRouteImport } from './routes/study-timer'
 import { Route as TargetGradeRouteImport } from './routes/target-grade'
+import { Route as UnitConverterRouteImport } from './routes/unit-converter'
 import { Route as WeightedGradeRouteImport } from './routes/weighted-grade'
 import { Route as WhatIfRouteImport } from './routes/what-if'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorRoute = CalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GpaRoute = GpaRouteImport.update({
@@ -38,14 +48,34 @@ const GradeCalculatorRoute = GradeCalculatorRouteImport.update({
   path: '/grade-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GradeConverterRoute = GradeConverterRouteImport.update({
+  id: '/grade-converter',
+  path: '/grade-converter',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PercentageRoute = PercentageRouteImport.update({
   id: '/percentage',
   path: '/percentage',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PomodoroRoute = PomodoroRouteImport.update({
+  id: '/pomodoro',
+  path: '/pomodoro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudyTimerRoute = StudyTimerRouteImport.update({
+  id: '/study-timer',
+  path: '/study-timer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TargetGradeRoute = TargetGradeRouteImport.update({
   id: '/target-grade',
   path: '/target-grade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnitConverterRoute = UnitConverterRouteImport.update({
+  id: '/unit-converter',
+  path: '/unit-converter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WeightedGradeRoute = WeightedGradeRouteImport.update({
@@ -61,32 +91,47 @@ const WhatIfRoute = WhatIfRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calculator': typeof CalculatorRoute
   '/gpa': typeof GpaRoute
   '/grade-average': typeof GradeAverageRoute
   '/grade-calculator': typeof GradeCalculatorRoute
+  '/grade-converter': typeof GradeConverterRoute
   '/percentage': typeof PercentageRoute
+  '/pomodoro': typeof PomodoroRoute
+  '/study-timer': typeof StudyTimerRoute
   '/target-grade': typeof TargetGradeRoute
+  '/unit-converter': typeof UnitConverterRoute
   '/weighted-grade': typeof WeightedGradeRoute
   '/what-if': typeof WhatIfRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calculator': typeof CalculatorRoute
   '/gpa': typeof GpaRoute
   '/grade-average': typeof GradeAverageRoute
   '/grade-calculator': typeof GradeCalculatorRoute
+  '/grade-converter': typeof GradeConverterRoute
   '/percentage': typeof PercentageRoute
+  '/pomodoro': typeof PomodoroRoute
+  '/study-timer': typeof StudyTimerRoute
   '/target-grade': typeof TargetGradeRoute
+  '/unit-converter': typeof UnitConverterRoute
   '/weighted-grade': typeof WeightedGradeRoute
   '/what-if': typeof WhatIfRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/calculator': typeof CalculatorRoute
   '/gpa': typeof GpaRoute
   '/grade-average': typeof GradeAverageRoute
   '/grade-calculator': typeof GradeCalculatorRoute
+  '/grade-converter': typeof GradeConverterRoute
   '/percentage': typeof PercentageRoute
+  '/pomodoro': typeof PomodoroRoute
+  '/study-timer': typeof StudyTimerRoute
   '/target-grade': typeof TargetGradeRoute
+  '/unit-converter': typeof UnitConverterRoute
   '/weighted-grade': typeof WeightedGradeRoute
   '/what-if': typeof WhatIfRoute
 }
@@ -94,42 +139,62 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/calculator'
     | '/gpa'
     | '/grade-average'
     | '/grade-calculator'
+    | '/grade-converter'
     | '/percentage'
+    | '/pomodoro'
+    | '/study-timer'
     | '/target-grade'
+    | '/unit-converter'
     | '/weighted-grade'
     | '/what-if'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/calculator'
     | '/gpa'
     | '/grade-average'
     | '/grade-calculator'
+    | '/grade-converter'
     | '/percentage'
+    | '/pomodoro'
+    | '/study-timer'
     | '/target-grade'
+    | '/unit-converter'
     | '/weighted-grade'
     | '/what-if'
   id:
     | '__root__'
     | '/'
+    | '/calculator'
     | '/gpa'
     | '/grade-average'
     | '/grade-calculator'
+    | '/grade-converter'
     | '/percentage'
+    | '/pomodoro'
+    | '/study-timer'
     | '/target-grade'
+    | '/unit-converter'
     | '/weighted-grade'
     | '/what-if'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CalculatorRoute: typeof CalculatorRoute
   GpaRoute: typeof GpaRoute
   GradeAverageRoute: typeof GradeAverageRoute
   GradeCalculatorRoute: typeof GradeCalculatorRoute
+  GradeConverterRoute: typeof GradeConverterRoute
   PercentageRoute: typeof PercentageRoute
+  PomodoroRoute: typeof PomodoroRoute
+  StudyTimerRoute: typeof StudyTimerRoute
   TargetGradeRoute: typeof TargetGradeRoute
+  UnitConverterRoute: typeof UnitConverterRoute
   WeightedGradeRoute: typeof WeightedGradeRoute
   WhatIfRoute: typeof WhatIfRoute
 }
@@ -141,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator': {
+      id: '/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gpa': {
@@ -164,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GradeCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/grade-converter': {
+      id: '/grade-converter'
+      path: '/grade-converter'
+      fullPath: '/grade-converter'
+      preLoaderRoute: typeof GradeConverterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/percentage': {
       id: '/percentage'
       path: '/percentage'
@@ -171,11 +250,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PercentageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pomodoro': {
+      id: '/pomodoro'
+      path: '/pomodoro'
+      fullPath: '/pomodoro'
+      preLoaderRoute: typeof PomodoroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/study-timer': {
+      id: '/study-timer'
+      path: '/study-timer'
+      fullPath: '/study-timer'
+      preLoaderRoute: typeof StudyTimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/target-grade': {
       id: '/target-grade'
       path: '/target-grade'
       fullPath: '/target-grade'
       preLoaderRoute: typeof TargetGradeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unit-converter': {
+      id: '/unit-converter'
+      path: '/unit-converter'
+      fullPath: '/unit-converter'
+      preLoaderRoute: typeof UnitConverterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/weighted-grade': {
@@ -197,11 +297,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CalculatorRoute: CalculatorRoute,
   GpaRoute: GpaRoute,
   GradeAverageRoute: GradeAverageRoute,
   GradeCalculatorRoute: GradeCalculatorRoute,
+  GradeConverterRoute: GradeConverterRoute,
   PercentageRoute: PercentageRoute,
+  PomodoroRoute: PomodoroRoute,
+  StudyTimerRoute: StudyTimerRoute,
   TargetGradeRoute: TargetGradeRoute,
+  UnitConverterRoute: UnitConverterRoute,
   WeightedGradeRoute: WeightedGradeRoute,
   WhatIfRoute: WhatIfRoute,
 }
