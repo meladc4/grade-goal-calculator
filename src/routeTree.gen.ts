@@ -10,12 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GpaRouteImport } from './routes/gpa'
 import { Route as GradeAverageRouteImport } from './routes/grade-average'
 import { Route as GradeCalculatorRouteImport } from './routes/grade-calculator'
+import { Route as PercentageRouteImport } from './routes/percentage'
+import { Route as TargetGradeRouteImport } from './routes/target-grade'
+import { Route as WeightedGradeRouteImport } from './routes/weighted-grade'
+import { Route as WhatIfRouteImport } from './routes/what-if'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GpaRoute = GpaRouteImport.update({
+  id: '/gpa',
+  path: '/gpa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GradeAverageRoute = GradeAverageRouteImport.update({
@@ -28,35 +38,100 @@ const GradeCalculatorRoute = GradeCalculatorRouteImport.update({
   path: '/grade-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PercentageRoute = PercentageRouteImport.update({
+  id: '/percentage',
+  path: '/percentage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TargetGradeRoute = TargetGradeRouteImport.update({
+  id: '/target-grade',
+  path: '/target-grade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WeightedGradeRoute = WeightedGradeRouteImport.update({
+  id: '/weighted-grade',
+  path: '/weighted-grade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WhatIfRoute = WhatIfRouteImport.update({
+  id: '/what-if',
+  path: '/what-if',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/gpa': typeof GpaRoute
   '/grade-average': typeof GradeAverageRoute
   '/grade-calculator': typeof GradeCalculatorRoute
+  '/percentage': typeof PercentageRoute
+  '/target-grade': typeof TargetGradeRoute
+  '/weighted-grade': typeof WeightedGradeRoute
+  '/what-if': typeof WhatIfRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/gpa': typeof GpaRoute
   '/grade-average': typeof GradeAverageRoute
   '/grade-calculator': typeof GradeCalculatorRoute
+  '/percentage': typeof PercentageRoute
+  '/target-grade': typeof TargetGradeRoute
+  '/weighted-grade': typeof WeightedGradeRoute
+  '/what-if': typeof WhatIfRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/gpa': typeof GpaRoute
   '/grade-average': typeof GradeAverageRoute
   '/grade-calculator': typeof GradeCalculatorRoute
+  '/percentage': typeof PercentageRoute
+  '/target-grade': typeof TargetGradeRoute
+  '/weighted-grade': typeof WeightedGradeRoute
+  '/what-if': typeof WhatIfRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/grade-average' | '/grade-calculator'
+  fullPaths:
+    | '/'
+    | '/gpa'
+    | '/grade-average'
+    | '/grade-calculator'
+    | '/percentage'
+    | '/target-grade'
+    | '/weighted-grade'
+    | '/what-if'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/grade-average' | '/grade-calculator'
-  id: '__root__' | '/' | '/grade-average' | '/grade-calculator'
+  to:
+    | '/'
+    | '/gpa'
+    | '/grade-average'
+    | '/grade-calculator'
+    | '/percentage'
+    | '/target-grade'
+    | '/weighted-grade'
+    | '/what-if'
+  id:
+    | '__root__'
+    | '/'
+    | '/gpa'
+    | '/grade-average'
+    | '/grade-calculator'
+    | '/percentage'
+    | '/target-grade'
+    | '/weighted-grade'
+    | '/what-if'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GpaRoute: typeof GpaRoute
   GradeAverageRoute: typeof GradeAverageRoute
   GradeCalculatorRoute: typeof GradeCalculatorRoute
+  PercentageRoute: typeof PercentageRoute
+  TargetGradeRoute: typeof TargetGradeRoute
+  WeightedGradeRoute: typeof WeightedGradeRoute
+  WhatIfRoute: typeof WhatIfRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gpa': {
+      id: '/gpa'
+      path: '/gpa'
+      fullPath: '/gpa'
+      preLoaderRoute: typeof GpaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/grade-average': {
@@ -82,13 +164,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GradeCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/percentage': {
+      id: '/percentage'
+      path: '/percentage'
+      fullPath: '/percentage'
+      preLoaderRoute: typeof PercentageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/target-grade': {
+      id: '/target-grade'
+      path: '/target-grade'
+      fullPath: '/target-grade'
+      preLoaderRoute: typeof TargetGradeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/weighted-grade': {
+      id: '/weighted-grade'
+      path: '/weighted-grade'
+      fullPath: '/weighted-grade'
+      preLoaderRoute: typeof WeightedGradeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/what-if': {
+      id: '/what-if'
+      path: '/what-if'
+      fullPath: '/what-if'
+      preLoaderRoute: typeof WhatIfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GpaRoute: GpaRoute,
   GradeAverageRoute: GradeAverageRoute,
   GradeCalculatorRoute: GradeCalculatorRoute,
+  PercentageRoute: PercentageRoute,
+  TargetGradeRoute: TargetGradeRoute,
+  WeightedGradeRoute: WeightedGradeRoute,
+  WhatIfRoute: WhatIfRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
